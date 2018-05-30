@@ -1,5 +1,14 @@
 <?php
-	$coordinates = '43.0846, -77.6743';
+
+	//default 43.0846, -77.6743
+	//htmlentities is to help prevent malicious code being entered
+	$location = htmlentities($_POST['location']);
+	
+	//this is for when you first load into the page. if this is not here it errors
+	if(!isset($_POST['location'])){
+		$location = '43.0846, -77.6743';
+	}
+	$coordinates = $location;
 	
 	$api_url = 'https://api.darksky.net/forecast/a7e26dce9a2d08b530822a9f9d459bce/'.$coordinates;
 	
@@ -19,6 +28,7 @@
 	$temp_low = round($forecast->daily->data[0]->temperatureLow) - 2;
     $precip_chance = $forecast->daily->data[0]->precipProbability * 100;
     $precipType = $forecast->daily->data[0]->precipType;
+    
 	
 	//Get the appropriate icon	
 	//matches the icons dark sky has with the icons from erik flowers
@@ -113,15 +123,19 @@
              <form class="form-inline" method="post">
              	<div class="form-group mx-auto my-5">
              		<label class="sr-only" for="location">Enter a location</label>
-             		<input type="text" class="form-control" id="location" placeholder="Location">
+             		<input type="text" class="form-control" id="location" placeholder="Location"
+             		name="location">
              		<button class="btn btn-primary" type="submit">Search</button>
              	</div>
              </form>
              
+             <h2 class="display-5">Showing Forecast For:</h2>
+             <h2 class="display-5"><?php echo $location ?></h2>
+             <br />
+             
             <!-- the weather card -->
         	<div class="card p-2" style="margin: 0 auto; max-width: 320px;">
              	<h1>Current Forecast</h1>
-				
 				<li class="list-group-item d-flex justify-content-between" style="border: none">
              	<!-- the current temperature -->
              	<p class="lead m-0">
