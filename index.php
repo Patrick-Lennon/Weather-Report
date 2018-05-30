@@ -178,7 +178,7 @@
              	<!-- the description of weather -->
              	<h4 class="display-5">Weather: <?php echo $summary; ?></h5>
              	<!-- Humidity level -->
-             	<h4 class="display-5">Humidity: <?php echo $humidity;?>&deg;</h4>
+             	<h4 class="display-5">Humidity: <?php echo $humidity;?>%</h4>
              	
              	<!-- hi, low, and precipitation chance -->
              	<li class="list-group-item d-flex justify-content-between" style="border: none">
