@@ -14,6 +14,10 @@
 	$temp_curr = round($forecast->currently->temperature);
 	$summary = $forecast->currently->summary;
 	$icon = $forecast->currently->icon;
+	$temp_high = round($forecast->daily->data[0]->temperatureHigh) + 2;
+	$temp_low = round($forecast->daily->data[0]->temperatureLow) - 2;
+    $precip_chance = $forecast->daily->data[0]->precipProbability * 100;
+    $precipType = $forecast->daily->data[0]->precipType;
 	
 	//Get the appropriate icon	
 	//matches the icons dark sky has with the icons from erik flowers
@@ -75,6 +79,23 @@
             return the_icon;
         }
     }
+    
+    //Function to display the proper type of precipitation
+    function getPrecipType($precipType)
+    {
+        if($precipType == 'rain'){
+            $display = 'Rain';
+            return $display;
+        }
+        else if($precipType == 'sleet'){
+            $display = 'Sleet';
+            return $display;
+        }
+        else if($precipType == 'snow'){
+            $display = 'Snow';
+            return $display;
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -89,13 +110,31 @@
         <main class="container text-center">
         	<div class="card p-2" style="margin: 0 auto; max-width: 320px;">
              	<h1>Current Forecast</h1>
-
+				
+				<li class="list-group-item d-flex justify-content-between" style="border: none">
              	<!-- the current temperature -->
-             	<p class="display-2"><?php echo $temp_curr; ?> &deg;</p>
+             	<p class="lead m-0">
+             	<p class="display-2"><?php echo $temp_curr;?>&deg;</p> </p>
+             	<p class="lead m-0">
              	<!-- the icon -->
-             	<p class="display-4"><?php echo get_icon($icon); ?></p>
+             	<p class="display-5"><?php echo get_icon($icon); ?></p> </p>
+             	
+             	</li>
              	<!-- the description of weather -->
-             	<h5 class="display-5"><?php echo $summary; ?></h5>
+             	<h4 class="display-5"><?php echo $summary; ?></h5>
+             	
+             	<!-- hi, low, and precipitation chance -->
+             	<li class="list-group-item d-flex justify-content-between" style="border: none">
+                    <p class="lead m-0">
+                        <span style="text-decoration: underline">Hi</span> <br> <?php echo $temp_high; ?>&deg;
+                    </p>
+                    <p class="lead m-0">
+                        <span style="text-decoration: underline">Low</span> <br> <?php echo $temp_low; ?>&deg;
+                    </p>			
+                    <p class="lead m-0">
+                        <span style="text-decoration: underline"><?php echo getPrecipType($precipType) ; ?></span> <br> <?php echo $precip_chance; ?>%
+                    </p>
+                </li>
             </div>
         </main>
     </body>
