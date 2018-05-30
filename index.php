@@ -1,14 +1,27 @@
 <?php
+	//google geocode api
+	//https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=AIzaSyBBrPUkMbvHcvIDZdMw45VHSwNlr2c5hnk
 
 	//default 43.0846, -77.6743
 	//htmlentities is to help prevent malicious code being entered
 	$location = htmlentities($_POST['location']);
 	
+	//replace spaces with +
+	$location = str_replace(' ', '+', $location);
+	
+	$geocode_url = 'https://maps.googleapis.com/maps/api/geocode/json?address='.$location.'&key=AIzaSyBBrPUkMbvHcvIDZdMw45VHSwNlr2c5hnk';
+	
+	$location_data = json_decode(file_get_contents($geocode_url));
 	//this is for when you first load into the page. if this is not here it errors
 	if(!isset($_POST['location'])){
 		$location = '43.0846, -77.6743';
 	}
-	$coordinates = $location;
+	
+	$coordinates = $location_data->results[0]->geometry->location;;
+	
+	$coordinates = $coordinates->lat.','.$coordinates->lng;
+	
+	$place = $location_data->results[0]->address_components[0]->long_name;
 	
 	$api_url = 'https://api.darksky.net/forecast/a7e26dce9a2d08b530822a9f9d459bce/'.$coordinates;
 	
@@ -130,7 +143,7 @@
              </form>
              
              <h2 class="display-5">Showing Forecast For:</h2>
-             <h2 class="display-5"><?php echo $location ?></h2>
+             <h2 class="display-5"><?php echo $place ?></h2>
              <br />
              
             <!-- the weather card -->
