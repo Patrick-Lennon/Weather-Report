@@ -109,6 +109,16 @@
     </head>
     <body>
         <main class="container text-center">
+        	<!-- this is the search form for different locations -->
+             <form class="form-inline" method="post">
+             	<div class="form-group mx-auto my-5">
+             		<label class="sr-only" for="location">Enter a location</label>
+             		<input type="text" class="form-control" id="location" placeholder="Location">
+             		<button class="btn btn-primary" type="submit">Search</button>
+             	</div>
+             </form>
+             
+            <!-- the weather card -->
         	<div class="card p-2" style="margin: 0 auto; max-width: 320px;">
              	<h1>Current Forecast</h1>
 				
