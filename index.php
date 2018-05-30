@@ -14,6 +14,7 @@
 	$temp_curr = round($forecast->currently->temperature);
 	$summary = $forecast->currently->summary;
 	$icon = $forecast->currently->icon;
+	$humidity = $forecast->daily->data[0]->humidity * 100;
 	$temp_high = round($forecast->daily->data[0]->temperatureHigh) + 2;
 	$temp_low = round($forecast->daily->data[0]->temperatureLow) - 2;
     $precip_chance = $forecast->daily->data[0]->precipProbability * 100;
@@ -121,7 +122,9 @@
              	
              	</li>
              	<!-- the description of weather -->
-             	<h4 class="display-5"><?php echo $summary; ?></h5>
+             	<h4 class="display-5">Weather: <?php echo $summary; ?></h5>
+             	<!-- Humidity level -->
+             	<h4 class="display-5">Humidity: <?php echo $humidity;?>&deg;</h4>
              	
              	<!-- hi, low, and precipitation chance -->
              	<li class="list-group-item d-flex justify-content-between" style="border: none">
