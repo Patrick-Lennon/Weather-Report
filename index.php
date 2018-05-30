@@ -4,43 +4,58 @@
 
 	//default 43.0846, -77.6743
 	//htmlentities is to help prevent malicious code being entered
-	$location = htmlentities($_POST['location']);
 	
-	//replace spaces with +
-	$location = str_replace(' ', '+', $location);
-	
-	$geocode_url = 'https://maps.googleapis.com/maps/api/geocode/json?address='.$location.'&key=AIzaSyBBrPUkMbvHcvIDZdMw45VHSwNlr2c5hnk';
-	
-	$location_data = json_decode(file_get_contents($geocode_url));
 	//this is for when you first load into the page. if this is not here it errors
-	if(!isset($_POST['location'])){
-		$location = '43.0846, -77.6743';
-	}
-	
-	$coordinates = $location_data->results[0]->geometry->location;;
-	
-	$coordinates = $coordinates->lat.','.$coordinates->lng;
-	
-	$place = $location_data->results[0]->address_components[0]->long_name;
-	
-	$api_url = 'https://api.darksky.net/forecast/a7e26dce9a2d08b530822a9f9d459bce/'.$coordinates;
-	
-	$forecast = json_decode(file_get_contents($api_url));
+	//if(!isset($_POST['location'])){
+	//	$location = '43.0846, -77.6743';
+	//}
 	
     //Displays the data
 	//echo '<pre>';
 	//print_r($forecast);
 	//echo '</pre>';
 	
-	//Current conditions
-	$temp_curr = round($forecast->currently->temperature);
-	$summary = $forecast->currently->summary;
-	$icon = $forecast->currently->icon;
-	$humidity = $forecast->daily->data[0]->humidity * 100;
-	$temp_high = round($forecast->daily->data[0]->temperatureHigh) + 2;
-	$temp_low = round($forecast->daily->data[0]->temperatureLow) - 2;
-    $precip_chance = $forecast->daily->data[0]->precipProbability * 100;
-    $precipType = $forecast->daily->data[0]->precipType;
+	//Setting the data first, in case the location isn't set
+	$temp_curr = '0';
+	$summary = '';
+	$icon = 'clear-day';
+	$humidity = '0';
+	$temp_high = '0';
+	$temp_low = '0';
+	$precip_chance = '0';
+	$precipType = 'rain';
+	$place = ' ';
+	
+	
+	if(isset($_POST['location'])){
+		$location = htmlentities($_POST['location']);
+	
+		//replace spaces with +
+		$location = str_replace(' ', '+', $location);
+	
+		$geocode_url = 'https://maps.googleapis.com/maps/api/geocode/json?address='.$location.'&key=AIzaSyBBrPUkMbvHcvIDZdMw45VHSwNlr2c5hnk';
+	
+		$location_data = json_decode(file_get_contents($geocode_url));
+		
+		$coordinates = $location_data->results[0]->geometry->location;;
+	
+		$coordinates = $coordinates->lat.','.$coordinates->lng;
+	
+		$place = $location_data->results[0]->address_components[0]->long_name;
+	
+		$api_url = 'https://api.darksky.net/forecast/a7e26dce9a2d08b530822a9f9d459bce/'.$coordinates;
+	
+		$forecast = json_decode(file_get_contents($api_url));
+		//Current conditions
+		$temp_curr = round($forecast->currently->temperature);
+		$summary = $forecast->currently->summary;
+		$icon = $forecast->currently->icon;
+		$humidity = $forecast->daily->data[0]->humidity * 100;
+		$temp_high = round($forecast->daily->data[0]->temperatureHigh) + 2;
+		$temp_low = round($forecast->daily->data[0]->temperatureLow) - 2;
+    	$precip_chance = $forecast->daily->data[0]->precipProbability * 100;
+    	$precipType = $forecast->daily->data[0]->precipType;
+    }
     
 	
 	//Get the appropriate icon	
@@ -154,9 +169,11 @@
              	<p class="lead m-0">
              	<p class="display-2"><?php echo $temp_curr;?>&deg;</p> </p>
              	<p class="lead m-0">
-             	<!-- the icon -->
-             	<p class="display-5"><?php echo get_icon($icon); ?></p> </p>
              	
+             	<!-- the icon -->
+             	<p class="display-5"><?php echo get_icon($icon); ?></p>
+             	
+             	</p>
              	</li>
              	<!-- the description of weather -->
              	<h4 class="display-5">Weather: <?php echo $summary; ?></h5>
